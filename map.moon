@@ -2,22 +2,27 @@
 -- Holds Objects
 --
 
-class Map
-	-- locals
+ECS = require 'ecs'
 
-	-- class variables
+class Map extends ECS
+	-- game specifig map class
+	-- defines its systems
+
+	-- system definitions
+
+	AnimationSystem = require 'ecs.systems.animation_system'
+
+	class NavmeshSystem
+		-- disabled until i figure this out lol
+		filter: ECS.filters.empty!
 
 	-- constructor
+
 	new: () =>
 		--
-
-	-- methods
-
-	loadData: =>
-		--
-
-	update: (dt) =>
-		--
-
-	draw: =>
-		--
+		super {
+			AnimationSystem
+			NavmeshSystem
+		}, {
+			AnimationSystem
+		}
