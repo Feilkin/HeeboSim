@@ -12,7 +12,7 @@ class ECS
 				return opt(entity)
 			when 'table'
 				for k, v in pairs opt
-					return false unless entity[k] == v
+					return false unless entity[k]
 				return true
 			when 'string'
 				return entity[opt] == true

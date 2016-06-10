@@ -56,5 +56,5 @@ love.visible = (v) ->
 	--
 
 love.wheelmoved = (x, y) ->
-	game\mousemoved(x, y)
+	game\wheelmoved(x, y)
 
