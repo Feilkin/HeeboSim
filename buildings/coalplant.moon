@@ -15,6 +15,13 @@ class CoalPlant
 		}
 	}
 
-	new: () =>
-		@x = 0
-		@y = 0
+	sockets: {
+		entrance: {
+			x: 0
+			y: 71
+		}
+	}
+
+	new: (x, y) =>
+		@x = x or 0
+		@y = y or 0

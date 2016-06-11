@@ -59,3 +59,53 @@ class Map extends ECS
 
 		@addEntity(buildings['CoalPlant'](6, 6))
 		@buildings = buildings
+
+	-- gets Objects at given point
+	-- NOTE: world coordinates
+	getObjectAt: (x, y) =>
+		-- TODO: spatial hashing
+
+		for object in *@entities
+			for collider in *object.shape
+				switch collider.type
+					when 'AABB'
+						local minx, miny, maxx, maxy
+						minx, miny = collider.x, collider.y
+						maxx, maxy = minx + collider.width, miny + collider.height
+
+						if x > minx and x < maxy and y > miny and y < maxy
+							-- we can return here, since the objects can't overlap
+							return object
+					else
+						error('Unknown collider type: ' .. collider.type)
+
+	checkAABB: (a_min_x, a_min_y, a_max_x, a_max_y, b_min_x, b_min_y, b_max_x, b_max_y) =>
+		return a_min_x > b_max_x and a_max_x < b_min_x and a_min_y > b_max_y and a_max_y < b_min_y
+
+	overlaps: (object, other) =>
+		-- test if object overlaps with other
+		for collider in *object.shape
+			for other_collider in *other.shape
+				switch collider.type .. '-' .. other_collider.type
+					when 'AABB-AABB'
+						return @checkAABB collider.x,
+							collider.y,
+							collider.x + collider.width,
+							collider.y + collider.height,
+							other_collider.x,
+							other_collider.y,
+							other_collider.x + other_collider.width,
+							other_collider.y + other_collider.height
+					else
+						error 'No collider for ' .. collider.type .. '-' .. other_collider.type
+		return false
+
+	canPlace: (object_class, x, y) =>
+		-- check if a object can placed here
+		temp_object = object_class(x, y)
+
+		for other in *@objects
+			if overlaps(temp_object, other)
+				return false
+
+		return true

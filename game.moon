@@ -81,7 +81,10 @@ class Game
 
 		for tool_name in *{'selection_tool', 'building_tool'}
 			tool = require tool_name
-			tools[tool_name] = tool()
+			tools[tool_name] = tool(@)
+
+		@tools = tools
+		@current_tool = tools['building_tool']
 
 
 	parseSettings: (raw_settings) =>
@@ -93,7 +96,7 @@ class Game
 			@map\update(dt)
 			@ecs\update(dt)
 			@camera\update(dt)
-			@world_time += dt / 60
+			--@world_time += dt / 6
 			if @world_time >= 1
 				@world_time = 0
 			@world_shader\send('day_time', @world_time)
@@ -110,6 +113,7 @@ class Game
 		@camera\draw()
 		love.graphics.setShader(old_shader)
 		-- TODO: gui
+		love.graphics.print('Current tool: ' .. tostring(@current_tool), 2, 2)
 
 	selectTool: (tool_name) =>
 		old_tool = @current_tool
@@ -150,9 +154,12 @@ class Game
 		local callback
 		callback = @settings.keybindings[mods .. key]
 
-		return unless callback
+		return if callback and callback(@)
 
-		callback(@)
+		-- a callback was not found or it returned false
+		-- pass the event to current tool
+
+		@current_tool\keypressed(key, code, istouch)
 
 	wheelmoved: (x, y) =>
 		@camera\zoom(y / 10)
