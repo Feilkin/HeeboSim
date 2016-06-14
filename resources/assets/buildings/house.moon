@@ -8,6 +8,8 @@
 			height: 64
 	animations:
 		default:
+			width: 80
+			height: 64
 			frames:
 			{
 				{

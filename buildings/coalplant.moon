@@ -15,6 +15,9 @@ class CoalPlant
 		}
 	}
 
+	width: 176
+	height: 96
+
 	sockets: {
 		entrance: {
 			x: 0

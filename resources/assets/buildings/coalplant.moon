@@ -24,6 +24,8 @@
 			height: 11
 	animations:
 		default:
+			width: 176
+			height: 96
 			frames:
 			{
 				{

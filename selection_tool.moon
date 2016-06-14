@@ -13,3 +13,18 @@ class SelectionTool
 
 	initState: () =>
 		--
+
+	draw: =>
+		--
+
+	mousepressed: (x, y, button, istouch) =>
+		--
+
+	mousereleased: (x, y, button, istouch) =>
+		--
+
+	keypressed: (key, code,  isrepeat) =>
+		--
+
+	__tostring: =>
+		return @@__name

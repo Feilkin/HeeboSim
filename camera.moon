@@ -13,7 +13,7 @@ class Camera
 		@x = 0
 		@y = 0
 		@speed = 200
-		@threshold = 128
+		@threshold = 50
 		@zoom_factor = 1
 		@canvas = love.graphics.newCanvas(width, height)
 		@width = width
@@ -32,9 +32,9 @@ class Camera
 			@x += ((mx - (@width - @threshold)) / @threshold) * @speed * dt
 
 		if my < @threshold
-			@y += ((@threshold - my)/@threshold) * @speed * dt
+			@y -= ((@threshold - my)/@threshold) * @speed * dt
 		if my > @height - @threshold
-			@y -= ((my - (@height - @threshold)) / @threshold) * @speed * dt
+			@y += ((my - (@height - @threshold)) / @threshold) * @speed * dt
  
 	clear: (color) =>
 		old_canvas = love.graphics.getCanvas()
@@ -54,7 +54,7 @@ class Camera
 		love.graphics.setScissor(0, 0, @width, @height)
 
 		love.graphics.push()
-		love.graphics.translate(math.floor(-@x), math.floor(@y))
+		love.graphics.translate(math.floor(-@x), math.floor(-@y))
 		love.graphics.scale(@zoom_factor, @zoom_factor)
 
 	detach: () =>
@@ -66,6 +66,13 @@ class Camera
 
 	draw: () =>
 		love.graphics.draw(@canvas)
+
+	-- screen coordinates to world coordinates
+	screenToWorld: (sx, sy) =>
+		return (sx + @x) / @zoom_factor, (sy + @y) / @zoom_factor
+
+	worldToScreen: (wx, wy) =>
+		return (wx - @x) * @zoom_factor, (wy - @y) * @zoom_factor
 
 	mouseToWorld: () =>
 		local mx, my

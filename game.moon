@@ -79,7 +79,7 @@ class Game
 		local tools
 		tools = {}
 
-		for tool_name in *{'selection_tool', 'building_tool'}
+		for tool_name in *{'selection_tool', 'building_tool', 'road_tool'}
 			tool = require tool_name
 			tools[tool_name] = tool(@)
 
@@ -113,6 +113,7 @@ class Game
 		@camera\draw()
 		love.graphics.setShader(old_shader)
 		-- TODO: gui
+		@current_tool\draw!
 		love.graphics.print('Current tool: ' .. tostring(@current_tool), 2, 2)
 
 	selectTool: (tool_name) =>
@@ -162,13 +163,14 @@ class Game
 		@current_tool\keypressed(key, code, istouch)
 
 	wheelmoved: (x, y) =>
-		@camera\zoom(y / 10)
+		-- zooming is disabled because it is broken
+		--@camera\zoom(y / 10)
 
 	mousepressed: (x, y, button, istouch) =>
-		--
+		@current_tool\mousepressed(x, y, button, istouch)
 
 	mousereleased: (x, y, button, istouch) =>
-		--
+		@current_tool\mousereleased(x, y, button, istouch)
 
 	quit: =>
 		return false
