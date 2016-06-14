@@ -41,6 +41,28 @@ class Map extends ECS
 								os = connection.socket
 								love.graphics.line(x, y, ob.x + os.x, ob.y + os.y)
 
+	class RoadRenderer
+		filter: ECS.filters.all_of {road: true}
+
+		draw: (entities, data) ->
+			old_color = {love.graphics.getColor()}
+			old_width = love.graphics.getLineWidth()
+
+			love.graphics.setColor(121, 65, 0, 255)
+			love.graphics.setLineWidth(16)
+
+			print 'RoadRenderer.draw #entities ' .. #entities
+			for road_node in *entities
+				for connection in *road_node.sockets.road_node.connections
+					sx, sy = road_node.x, road_node.y
+					ex = connection.building.x + connection.socket.x
+					ey = connection.building.y + connection.socket.y
+
+					love.graphics.line(sx, sy, ex, ey)
+
+			love.graphics.setColor(old_color)
+			love.graphics.setLineWidth(old_width)
+
 	-- constructor
 
 	new: () =>
@@ -50,6 +72,7 @@ class Map extends ECS
 			NavmeshSystem
 		}, {
 			AnimationSystem
+			RoadRenderer
 			SocketRenderer
 		}
 
@@ -160,5 +183,6 @@ class Map extends ECS
 
 		return true
 
-	snapToGrid: (wx, wy) =>
-		return wx - (wx % 16), wy - (wy % 16)
+	snapToGrid: (wx, wy, middle) =>
+		offset = (not middle and 8) or 0
+		return wx - (wx % 16) + offset, wy - (wy % 16) + offset
