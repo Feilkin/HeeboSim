@@ -5,6 +5,7 @@
 -- requires
 Camera = require 'camera'
 Map = require 'map'
+World = require 'world'
 ECS = require 'ecs'
 
 class Game
@@ -27,9 +28,9 @@ class Game
 
 		@map = map
 
-		-- ECS for the game
+		-- ECS for the game (holds ppl, needs better name)
 		local ecs
-		ecs = ECS()
+		ecs = World()
 
 		@ecs = ecs
 
@@ -73,7 +74,9 @@ class Game
 		world_shader\send('day_time', 0)
 
 		@world_shader = world_shader
-		@world_time = 0.5
+		@world_time = 700
+		@world_tick_rate = 1
+		@_world_time_buffer = 0
 
 		-- load tools
 		local tools
@@ -93,13 +96,25 @@ class Game
 
 	update: (dt) =>
 		if @has_focus
+			-- update world time
+			@_world_time_buffer += dt
+
+			if @_world_time_buffer >= @world_tick_rate
+				ticks = math.floor(@_world_time_buffer / @world_tick_rate)
+
+				if ticks > 1
+					print 'Skipping ' .. ticks - 1 .. ' ticks!'
+
+				@world_time += ticks
+				if @world_time > 24 * 60
+					@world_time = @world_time - 24 * 60
+
+				@_world_time_buffer -= ticks * @world_tick_rate
+
 			@map\update(dt)
 			@ecs\update(dt)
 			@camera\update(dt)
-			--@world_time += dt / 6
-			if @world_time >= 1
-				@world_time = 0
-			@world_shader\send('day_time', @world_time)
+			@world_shader\send('day_time', @world_time / (24 * 60))
 
 	draw: =>
 		@camera\clear({56, 109, 0})

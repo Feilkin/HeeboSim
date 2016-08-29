@@ -26,6 +26,13 @@ class House
 		}
 	}
 
+	beds:  {
+		{
+			x: 40
+			y: 64
+		}
+	}
+
 	new: (x, y) =>
 		@x = x or 0
 		@y = y or 0

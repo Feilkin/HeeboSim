@@ -80,6 +80,20 @@ class BuildingTool
 			new_building = building_class(wx, wy)
 			@game.map\addEntity(new_building)
 
+			-- add beds
+			if new_building.beds
+				for b in *new_building.beds
+					@game.ecs\addBed({
+						building: new_building
+						x: b.x + new_building.x
+						y: b.y + new_building.y
+					})
+
+			-- add jobs to list of free jobs
+			if new_building.jobs
+				for name, job in pairs new_building.jobs
+					@game.ecs\addJob(job)
+
 		@drag = false
 
 	__tostring: =>

@@ -62,7 +62,7 @@ class ECS
 		@systems = systems or {}
 		@renderers = renderers or {}
 
-		@data = {} -- data storage for systems
+		@data = { toAdd: {} } -- data storage for systems
 
 	-- methods
 
@@ -137,6 +137,11 @@ class ECS
 	update: (dt) =>
 		for s in *@systems
 			s.update(@filterEntities(s.filter, @entities), @data, dt)
+
+		-- add entities
+		while #@data.toAdd > 0
+			print 'added entity'
+			table.insert(@entities, table.remove(@data.toAdd))
 
 	draw: =>
 		--

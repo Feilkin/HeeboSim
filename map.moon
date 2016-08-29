@@ -50,8 +50,7 @@ class Map extends ECS
 
 			love.graphics.setColor(121, 65, 0, 255)
 			love.graphics.setLineWidth(16)
-
-			print 'RoadRenderer.draw #entities ' .. #entities
+			
 			for road_node in *entities
 				for connection in *road_node.sockets.road_node.connections
 					sx, sy = road_node.x, road_node.y
